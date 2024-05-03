@@ -1,48 +1,30 @@
-class main:
-    def __init__(self, key: dict) -> None:
-        self.key = key
+class CaesarCipher:
+    def __init__(self, rotation: int) -> None:
+        self.rotation = rotation
 
-    def get_input(self) -> None:
-        while True:
-            blank_string = str(input("Enter string to decrypt: "))
-            if blank_string.isalpha():
-                blank_string = blank_string.lower()
-                self.blank_string = blank_string
-                break
+    def encrypt_string(self, plaintext: str) -> str:
+        ciphertext = ""
+        for char in plaintext:
+            if char.isalpha():
+                shifted_char = chr(((ord(char.lower()) - ord('a') + self.rotation) % 26) + ord('a'))
+                if char.isupper():
+                    shifted_char = shifted_char.upper()
+                ciphertext += shifted_char
             else:
-                print("Input is not valid")
-                continue
+                ciphertext += char
+        return ciphertext
 
-    def encrypt_string(self) -> str:
-        output = ""
-        for c in self.blank_string:
-            for k, v in self.key.items():
-                if k == c:
-                    output += v
-                else:
-                    continue
-        self.decrypted_string = output
-        return (output)
-
-    def decrypt_string(self, string: str) -> str:
-        output = ""
-        string = string.lower()
-        string = string.strip()
-        if string == "":
-            return (self.blank_string)
-        else:
-            for c in string:
-                for k, v in self.key.items():
-                    if v == c:
-                        output += k
-
-        return (output)
+    def decrypt_string(self, ciphertext: str) -> str:
+        return self.encrypt_string(ciphertext)
 
 
 if __name__ == "__main__":
-    key ={"a": "d", "b": "e", "c": "f", "d": "g", "e": "h", "f": "i", "g": "j", "h": "k", "i": "l", "j": "m", "k": "n",
-           "l": "o", "m": "p", "n": "q", "o": "r", "p": "s", "q": "t", "r": "u", "s": "v", "t": "w", "u": "x", "v": "y",
-           "w": "z", "x": "a", "y": "b", "z": "c"}
-    main = main(key=key)
-    main.get_input()
-    print(main.encrypt_string())
+    rotation = int(input("Enter rotation value: "))
+    cipher = CaesarCipher(rotation)
+
+    plaintext = input("Enter string to encrypt: ")
+    encrypted_text = cipher.encrypt_string(plaintext)
+    print("Encrypted:", encrypted_text)
+
+    decrypted_text = cipher.decrypt_string(encrypted_text)
+    print("Decrypted:", decrypted_text)
